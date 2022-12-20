@@ -24,5 +24,21 @@ namespace CodingTracker
             _sqliteConnection.Open();
             return _sqliteConnection;
         }
+
+        internal static void CreateTable ()
+        {
+            using (var cmd = DatabaseConnection().CreateCommand())
+            {
+                cmd.CommandText =
+                    @"CREATE TABLE IF NOT EXISTS coding_session (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    StartTime TEXT,
+                    EndTime TEXT,
+                    Duration TEXT
+                    )";
+
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
