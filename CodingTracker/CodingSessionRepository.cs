@@ -83,5 +83,17 @@ namespace CodingTracker
 
         }
 
+        internal static void Insert(SQLiteConnection conn)
+        {
+            var cmd = conn.CreateCommand();
+
+            cmd.CommandText =
+                @"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('21-12-22 11:10', '22-12-22 20:20', '22-12-22 20:40')";
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+
+        }
     }
 }
