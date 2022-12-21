@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Configuration;
+using CodingTracker.Models;
+using System.Globalization;
 
 namespace CodingTracker
 {
@@ -13,19 +15,15 @@ namespace CodingTracker
         static string connection = ConfigurationManager.ConnectionStrings["CnnString"].ConnectionString;
         private static SQLiteConnection _sqliteConnection;
 
-        internal static void CreateDatabase()
-        {
-            SQLiteConnection.CreateFile(connection);
-        }
-
         internal static SQLiteConnection DatabaseConnection()
         {
             _sqliteConnection = new SQLiteConnection(connection);
             _sqliteConnection.Open();
             return _sqliteConnection;
+
         }
 
-        internal static void CreateTable ()
+        internal static void CreateTable()
         {
             using (var cmd = DatabaseConnection().CreateCommand())
             {
@@ -39,6 +37,51 @@ namespace CodingTracker
 
                 cmd.ExecuteNonQuery();
             }
+
         }
+
+        internal static void GetRecords(SQLiteConnection conn)
+        {
+            SQLiteDataReader reader;
+            var cmd = conn.CreateCommand();
+
+            cmd.CommandText =
+                "SELECT * FROM coding_session";
+
+            reader = cmd.ExecuteReader();
+
+            List<CodingSession> tableData = new();
+
+            while (reader.Read())
+            {
+                tableData.Add(
+                    new CodingSession
+                    {
+                        Id = reader.GetInt32(0),
+                        StartTime = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
+                        EndTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
+                        Duration = DateTime.ParseExact(reader.GetString(3), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture)
+                    }); ;
+            }
+
+            PrintRecords(tableData);
+
+            conn.Close();
+
+        }
+
+        internal static void PrintRecords(List<CodingSession> tableData)
+        {
+            Console.WriteLine("-----------------------------------------------------------------------------------------\n");
+            
+            foreach (var record in tableData)
+            {
+                Console.WriteLine($"{record.Id} - Start Time: {record.StartTime} | End Time: {record.EndTime} | Duration: {record.EndTime.Subtract(record.StartTime)}");
+            }
+
+            Console.WriteLine("\n-----------------------------------------------------------------------------------------\n");
+
+        }
+
     }
 }
