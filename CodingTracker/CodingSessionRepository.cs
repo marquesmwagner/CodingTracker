@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Configuration;
+using System.Collections.Specialized;
 using CodingTracker.Models;
 using System.Globalization;
+using ConsoleTableExt;
 
 namespace CodingTracker
 {
@@ -64,22 +66,11 @@ namespace CodingTracker
                     }); ;
             }
 
-            PrintRecords(tableData);
+            ConsoleTableBuilder
+                .From(tableData)
+                .ExportAndWriteLine();
 
             conn.Close();
-
-        }
-
-        internal static void PrintRecords(List<CodingSession> tableData)
-        {
-            Console.WriteLine("-----------------------------------------------------------------------------------------\n");
-            
-            foreach (var record in tableData)
-            {
-                Console.WriteLine($"{record.Id} - Start Time: {record.StartTime} | End Time: {record.EndTime} | Duration: {record.EndTime.Subtract(record.StartTime)}");
-            }
-
-            Console.WriteLine("\n-----------------------------------------------------------------------------------------\n");
 
         }
 
@@ -87,8 +78,18 @@ namespace CodingTracker
         {
             var cmd = conn.CreateCommand();
 
+            var msgStart = ConfigurationManager.AppSettings.Get("StartTime");
+            var startTime = Helpers.GetInput($"\n{msgStart}");
+
+            if (startTime.Equals("0")) return;
+
+            var msgEnd = ConfigurationManager.AppSettings.Get("EndTime");
+            var endTime = Helpers.GetInput($"\n{msgEnd}");
+
+            if (endTime.Equals("0")) return;
+
             cmd.CommandText =
-                @"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('21-12-22 11:10', '22-12-22 20:20', '22-12-22 20:40')";
+                $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '22-12-22 20:40')";
 
             cmd.ExecuteNonQuery();
 
@@ -97,3 +98,5 @@ namespace CodingTracker
         }
     }
 }
+
+//Inserir type 0 pra sair do insert
