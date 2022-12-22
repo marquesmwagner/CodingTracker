@@ -9,7 +9,7 @@ namespace CodingTracker
 {
     internal class Helpers
     {
-        internal static string GetInput(string message)
+        internal static string GetInputTime(string message)
         {
             var provider = CultureInfo.InvariantCulture;
 
