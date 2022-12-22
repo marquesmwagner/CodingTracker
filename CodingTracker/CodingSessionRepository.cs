@@ -7,8 +7,9 @@ namespace CodingTracker
 {
     internal class CodingSessionRepository
     {
-        static string connection = ConfigurationManager.ConnectionStrings["CnnString"].ConnectionString;
+        private static string connection = ConfigurationManager.ConnectionStrings["CnnString"].ConnectionString;
         private static SQLiteConnection _sqliteConnection;
+        private static bool listIsEmpty = true;
 
         internal static SQLiteConnection DatabaseConnection()
         {
@@ -31,8 +32,8 @@ namespace CodingTracker
                     )";
 
                 cmd.ExecuteNonQuery();
-            }
 
+            }
         }
 
         internal static List<CodingSession> GetRecords(SQLiteConnection conn)
@@ -47,16 +48,25 @@ namespace CodingTracker
 
             reader = cmd.ExecuteReader();
 
-            while (reader.Read())
+            if (reader.HasRows)
             {
-                tableData.Add(
-                    new CodingSession
-                    {
-                        Id = reader.GetInt32(0),
-                        StartTime = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
-                        EndTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
-                        Duration = TimeSpan.Parse(reader.GetString(3))
-                    }); ;
+                while (reader.Read())
+                {
+                    tableData.Add(
+                        new CodingSession
+                        {
+                            Id = reader.GetInt32(0),
+                            StartTime = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture),
+                            EndTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture),
+                            Duration = reader.GetString(3)
+                        }); ;
+                }
+                listIsEmpty = false;
+            }
+            else
+            {
+                Console.WriteLine("No records found. The list is empty.");
+                listIsEmpty = true;
             }
 
             conn.Close();
@@ -67,8 +77,6 @@ namespace CodingTracker
 
         internal static void Insert(SQLiteConnection conn)
         {
-            var cmd = conn.CreateCommand();
-
             var msgStart = ConfigurationManager.AppSettings.Get("StartTime");
             var startTime = Helpers.GetInputTime($"\n{msgStart}");
 
@@ -79,17 +87,54 @@ namespace CodingTracker
 
             if (endTime.Equals("0")) return;
 
-            var durationTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture) - DateTime.ParseExact(startTime, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
+            var durationTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture) - DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture);
+
+            TimeSpan timeTicks = new TimeSpan(durationTime.Ticks);
+
+            var duration = string.Format("{0:00}:{1:00}:{2:00}", (int)timeTicks.TotalHours, timeTicks.Minutes, timeTicks.Seconds);
+
+            conn.Open();
+            var cmd = conn.CreateCommand();
 
             cmd.CommandText =
-                $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{durationTime.ToString()}')";
+                $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{duration}')";
 
             cmd.ExecuteNonQuery();
 
             conn.Close();
 
         }
-    
-    }
 
+        internal static void Delete(SQLiteConnection conn)
+        {
+            TableVisualization.PrintTable(GetRecords(conn));
+            
+            if (listIsEmpty) return;
+
+            var msgId = ConfigurationManager.AppSettings.Get("GetId");
+            var inputId = Helpers.GetId($"\n{msgId}");
+
+            if (inputId.Equals("0")) return;
+
+            conn.Open();
+            var cmd = conn.CreateCommand();
+
+            cmd.CommandText =
+                $"DELETE FROM coding_session WHERE Id = '{inputId}'"; 
+
+            var rowCount = cmd.ExecuteNonQuery();
+
+            if (rowCount == 0)
+            {
+                Console.WriteLine($"\nRecord with Id {inputId} doesn't exist.");
+            }
+            else
+            {
+                Console.WriteLine($"\nRecord with Id {inputId} was deleted.");
+            }
+
+            conn.Close();
+
+        }
+    }
 }
