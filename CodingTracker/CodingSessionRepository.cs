@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using System.Configuration;
-using System.Collections.Specialized;
 using CodingTracker.Models;
 using System.Globalization;
-using ConsoleTableExt;
 
 namespace CodingTracker
 {
@@ -42,8 +35,10 @@ namespace CodingTracker
 
         }
 
-        internal static void GetRecords(SQLiteConnection conn)
+        internal static List<CodingSession> GetRecords(SQLiteConnection conn)
         {
+            List<CodingSession> tableData = new();
+
             SQLiteDataReader reader;
             var cmd = conn.CreateCommand();
 
@@ -51,8 +46,6 @@ namespace CodingTracker
                 "SELECT * FROM coding_session";
 
             reader = cmd.ExecuteReader();
-
-            List<CodingSession> tableData = new();
 
             while (reader.Read())
             {
@@ -66,12 +59,9 @@ namespace CodingTracker
                     }); ;
             }
 
-            ConsoleTableBuilder
-                .From(tableData)
-                .ExportAndWriteLine();
-
             conn.Close();
 
+            return tableData;
         }
 
         internal static void Insert(SQLiteConnection conn)
@@ -99,4 +89,3 @@ namespace CodingTracker
     }
 }
 
-//Inserir type 0 pra sair do insert
