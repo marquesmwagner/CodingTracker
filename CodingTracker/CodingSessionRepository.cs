@@ -55,13 +55,14 @@ namespace CodingTracker
                         Id = reader.GetInt32(0),
                         StartTime = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
                         EndTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture),
-                        Duration = DateTime.ParseExact(reader.GetString(3), "dd-MM-yy HH:mm", CultureInfo.InvariantCulture)
+                        Duration = TimeSpan.Parse(reader.GetString(3))
                     }); ;
             }
 
             conn.Close();
 
             return tableData;
+
         }
 
         internal static void Insert(SQLiteConnection conn)
@@ -69,23 +70,26 @@ namespace CodingTracker
             var cmd = conn.CreateCommand();
 
             var msgStart = ConfigurationManager.AppSettings.Get("StartTime");
-            var startTime = Helpers.GetInput($"\n{msgStart}");
+            var startTime = Helpers.GetInputTime($"\n{msgStart}");
 
             if (startTime.Equals("0")) return;
 
             var msgEnd = ConfigurationManager.AppSettings.Get("EndTime");
-            var endTime = Helpers.GetInput($"\n{msgEnd}");
+            var endTime = Helpers.GetInputTime($"\n{msgEnd}");
 
             if (endTime.Equals("0")) return;
 
+            var durationTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture) - DateTime.ParseExact(startTime, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
+
             cmd.CommandText =
-                $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '22-12-22 20:40')";
+                $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{durationTime.ToString()}')";
 
             cmd.ExecuteNonQuery();
 
             conn.Close();
 
         }
+    
     }
-}
 
+}

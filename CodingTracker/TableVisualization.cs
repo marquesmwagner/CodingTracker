@@ -15,6 +15,9 @@ namespace CodingTracker
             ConsoleTableBuilder
                 .From(tableData)
                 .ExportAndWrite();
+
         }
+    
     }
+
 }
