@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static CodingTracker.TableVisualization;
 using static CodingTracker.CodingSessionRepository;
+using System.Runtime.Intrinsics.X86;
 
 namespace CodingTracker
 {
@@ -40,26 +41,29 @@ namespace CodingTracker
                     case "1":
                         Console.Clear();
                         PrintTable(GetRecords(DatabaseConnection()));
+                        Console.Clear();
                         break;
                     case "2":
                         Console.Clear();
                         Insert(DatabaseConnection());
+                        Console.Clear();
                         break;
                     case "3":
                         Console.Clear();
                         Delete(DatabaseConnection());
+                        Console.Clear();
                         break;
                     case "4":
                         Console.Clear();
                         Update(DatabaseConnection());
+                        Console.Clear();
                         break;
                     default:
-                        Console.WriteLine("Invalid input. Please type a valid number.");
+                        Console.Clear();
+                        Console.WriteLine("\nInvalid input. Please type a valid number.");
                         break;
                 }
             }
         }
     }
 }
-
-//Console.Clear() after call a method.
