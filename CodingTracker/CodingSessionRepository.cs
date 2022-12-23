@@ -65,7 +65,8 @@ namespace CodingTracker
             }
             else
             {
-                Console.WriteLine("No records found. The list is empty.");
+                Console.Clear();
+                Console.WriteLine("\nNo records found. The list is empty.");
                 listIsEmpty = true;
             }
 
@@ -75,6 +76,8 @@ namespace CodingTracker
 
         internal static void Insert(SQLiteConnection conn)
         {
+            TableVisualization.PrintTable(GetRecords(conn));
+
             var msgStart = ConfigurationManager.AppSettings.Get("StartTime");
             var startTime = Helpers.GetInputTime($"\n{msgStart}");
 
@@ -97,6 +100,8 @@ namespace CodingTracker
                 $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{duration}')";
 
             cmd.ExecuteNonQuery();
+
+            Console.WriteLine("\Sucessfully inserted record.");
 
             conn.Close();
 
@@ -128,6 +133,8 @@ namespace CodingTracker
             {
                 Console.WriteLine($"\nRecord with Id {inputId} was deleted.");
             }
+
+            Console.WriteLine("\nSucessfully deleted record.");
 
             conn.Close();
 
@@ -182,9 +189,10 @@ namespace CodingTracker
 
             cmd.ExecuteNonQuery();
 
+            Console.WriteLine("\nSucessfully updated record.");
+
             conn.Close();
 
         }
     }
 }
-
