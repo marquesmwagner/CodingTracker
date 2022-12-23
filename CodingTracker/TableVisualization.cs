@@ -14,8 +14,12 @@ namespace CodingTracker
         {
             ConsoleTableBuilder
                 .From(tableData)
+                .WithTitle("RECORDS")
+                .WithColumn("ID", "Start Time", "End Time", "Duration")
                 .ExportAndWrite();
 
+            Console.WriteLine("\nType Enter to go back to menu.");
+            Console.ReadKey();
         }
         
         internal static void PrintMenu(List<List<object>> tableMenu)
