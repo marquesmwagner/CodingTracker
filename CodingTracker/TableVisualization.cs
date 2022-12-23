@@ -17,7 +17,14 @@ namespace CodingTracker
                 .ExportAndWrite();
 
         }
-    
+        
+        internal static void PrintMenu(List<List<object>> tableMenu)
+        {
+            ConsoleTableBuilder
+                .From(tableMenu)
+                .WithTitle("CODING TRACKER MENU")
+                .WithColumn("Option", "Description")
+                .ExportAndWrite();
+        }
     }
-
 }
