@@ -1,5 +1,4 @@
-﻿using static CodingTracker.TableVisualization;
-using static CodingTracker.CodingSessionRepository;
+﻿using static CodingTracker.Menu;
 
 namespace CodingTracker
 {
@@ -7,12 +6,7 @@ namespace CodingTracker
     {
         static void Main(string[] args)
         {
-            CreateTable();
-            Insert(DatabaseConnection());
-            PrintTable(GetRecords(DatabaseConnection()));
-            
-        }
-    
+            ShowMenu();
+        }    
     }
-
 }

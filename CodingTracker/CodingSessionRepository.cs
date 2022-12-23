@@ -101,7 +101,7 @@ namespace CodingTracker
 
             cmd.ExecuteNonQuery();
 
-            Console.WriteLine("\Sucessfully inserted record.");
+            Console.WriteLine("\nSucessfully inserted record.");
 
             conn.Close();
 
