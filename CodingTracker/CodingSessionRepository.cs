@@ -69,8 +69,6 @@ namespace CodingTracker
                 listIsEmpty = true;
             }
 
-            conn.Close();
-
             return tableData;
 
         }
@@ -92,8 +90,7 @@ namespace CodingTracker
             TimeSpan timeTicks = new TimeSpan(durationTime.Ticks);
 
             var duration = string.Format("{0:00}:{1:00}:{2:00}", (int)timeTicks.TotalHours, timeTicks.Minutes, timeTicks.Seconds);
-
-            conn.Open();
+         
             var cmd = conn.CreateCommand();
 
             cmd.CommandText =
@@ -111,12 +108,11 @@ namespace CodingTracker
             
             if (listIsEmpty) return;
 
-            var msgId = ConfigurationManager.AppSettings.Get("GetId");
-            var inputId = Helpers.GetId($"\n{msgId}");
+            var msgDelete = ConfigurationManager.AppSettings.Get("IdDelete");
+            var inputId = Helpers.GetId($"\n{msgDelete}");
 
             if (inputId.Equals("0")) return;
 
-            conn.Open();
             var cmd = conn.CreateCommand();
 
             cmd.CommandText =
@@ -136,5 +132,59 @@ namespace CodingTracker
             conn.Close();
 
         }
+
+        internal static void Update(SQLiteConnection conn)
+        {
+            TableVisualization.PrintTable(GetRecords(conn));
+
+            if (listIsEmpty) return;
+
+            var msgUpdate = ConfigurationManager.AppSettings.Get("IdUpdate");
+            var inputId = Helpers.GetId($"\n{msgUpdate}");
+
+            if (inputId.Equals("0")) return;
+
+            var id = Convert.ToInt32(inputId);
+
+            var checkCmd = conn.CreateCommand();
+
+            checkCmd.CommandText =
+                $"SELECT EXISTS(SELECT 1 FROM coding_session WHERE Id = {inputId})";
+
+            int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
+
+            if (checkQuery == 0)
+            {
+                Console.WriteLine($"\nRecord with Id {inputId} doesn't exist.");
+                conn.Close();
+                return;
+            }
+
+            var msgStart = ConfigurationManager.AppSettings.Get("StartTime");
+            var startTime = Helpers.GetInputTime($"\n{msgStart}");
+
+            if (startTime.Equals("0")) return;
+
+            var msgEnd = ConfigurationManager.AppSettings.Get("EndTime");
+            var endTime = Helpers.GetInputTime($"\n{msgEnd}");
+
+            if (endTime.Equals("0")) return;
+
+            var durationTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture) - DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture);
+
+            TimeSpan timeTicks = new TimeSpan(durationTime.Ticks);
+
+            var duration = string.Format("{0:00}:{1:00}:{2:00}", (int)timeTicks.Hours, timeTicks.Minutes, timeTicks.Seconds);
+
+            var cmd = conn.CreateCommand();
+            cmd.CommandText =
+                $"UPDATE coding_session SET StartTime = '{startTime}', EndTime = '{endTime}', Duration = '{duration}' WHERE Id = {id}";
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+
+        }
     }
 }
+
