@@ -101,7 +101,8 @@ namespace CodingTracker
 
             cmd.ExecuteNonQuery();
 
-            Console.WriteLine("\nSucessfully inserted record.");
+            Console.WriteLine("\nSucessfully inserted record. Type Enter to go back to menu.");
+            Console.ReadKey();
 
             conn.Close();
 
@@ -134,7 +135,8 @@ namespace CodingTracker
                 Console.WriteLine($"\nRecord with Id {inputId} was deleted.");
             }
 
-            Console.WriteLine("\nSucessfully deleted record.");
+            Console.WriteLine("\nSucessfully deleted record. Type Enter to go back to menu.");
+            Console.ReadKey();
 
             conn.Close();
 
@@ -189,7 +191,8 @@ namespace CodingTracker
 
             cmd.ExecuteNonQuery();
 
-            Console.WriteLine("\nSucessfully updated record.");
+            Console.WriteLine("\nSucessfully updated record. Type Enter to go back to menu.");
+            Console.ReadKey();
 
             conn.Close();
 
