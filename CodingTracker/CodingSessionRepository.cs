@@ -159,14 +159,15 @@ namespace CodingTracker
             var checkCmd = conn.CreateCommand();
 
             checkCmd.CommandText =
-                $"SELECT EXISTS(SELECT 1 FROM coding_session WHERE Id = {inputId})";
+                $"SELECT EXISTS(SELECT 1 FROM coding_session WHERE Id = {id})";
 
             int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
 
             if (checkQuery == 0)
             {
-                Console.WriteLine($"\nRecord with Id {inputId} doesn't exist.");
-                conn.Close();
+                Console.Clear();
+                Console.WriteLine($"\nRecord with Id {inputId} doesn't exist. Try again.\n");
+                Update(conn);
                 return;
             }
 

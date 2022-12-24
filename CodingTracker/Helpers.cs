@@ -38,12 +38,10 @@ namespace CodingTracker
             Console.Out.WriteLine(message);
             var input = Console.ReadLine();
 
-            if (input == "0") return input;
-
             while (!int.TryParse(input, out _))
             {
                 Console.WriteLine($"\n{validationId}");
-                input = Console.ReadLine();
+                input = Console.ReadLine(); 
             }
 
             return input;
