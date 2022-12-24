@@ -19,7 +19,8 @@ namespace CodingTracker
                 new List<object> {"1", "View records"},
                 new List<object> {"2", "Insert record"},
                 new List<object> {"3", "Delete record"},
-                new List<object> {"4", "Update record"}
+                new List<object> {"4", "Update record"},
+                new List<object> {"5", "Insert via StopWatch"}
             };
 
             CreateTable();
@@ -29,7 +30,7 @@ namespace CodingTracker
             {
                 Console.WriteLine();
                 PrintMenu(tableMenu);
-                Console.WriteLine("\n\nEnter a option.");
+                Console.WriteLine("\n\nEnter a option:");
                 var input = Console.ReadLine();
 
                 switch (input)
@@ -58,6 +59,11 @@ namespace CodingTracker
                     case "4":
                         Console.Clear();
                         Update(DatabaseConnection());
+                        Console.Clear();
+                        break;
+                    case "5":
+                        Console.Clear();
+                        InsertStopWatch(DatabaseConnection());
                         Console.Clear();
                         break;
                     default:

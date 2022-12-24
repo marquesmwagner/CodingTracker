@@ -1,4 +1,5 @@
-﻿using static CodingTracker.Menu;
+﻿using System.Globalization;
+using static CodingTracker.Menu;
 
 namespace CodingTracker
 {
@@ -7,6 +8,7 @@ namespace CodingTracker
         static void Main(string[] args)
         {
             ShowMenu();
+
         }    
     }
 }
