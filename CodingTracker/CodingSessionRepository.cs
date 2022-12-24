@@ -115,7 +115,7 @@ namespace CodingTracker
             if (listIsEmpty) return;
 
             var msgDelete = ConfigurationManager.AppSettings.Get("IdDelete");
-            var inputId = Helpers.GetId($"\n{msgDelete}");
+            var inputId = Helpers.GetId($"\n\n{msgDelete}");
 
             if (inputId.Equals("0")) return;
 
@@ -128,15 +128,16 @@ namespace CodingTracker
 
             if (rowCount == 0)
             {
-                Console.WriteLine($"\nRecord with Id {inputId} doesn't exist.");
+                Console.Clear();
+                Console.WriteLine($"\nRecord with Id {inputId} doesn't exist. Try again.\n");
+                Delete(conn);
             }
             else
             {
                 Console.WriteLine($"\nRecord with Id {inputId} was deleted.");
+                Console.WriteLine("\nSucessfully deleted record. Type Enter to go back to menu.");
+                Console.ReadKey();
             }
-
-            Console.WriteLine("\nSucessfully deleted record. Type Enter to go back to menu.");
-            Console.ReadKey();
 
             conn.Close();
 

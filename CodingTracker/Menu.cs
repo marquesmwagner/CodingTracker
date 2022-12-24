@@ -41,6 +41,8 @@ namespace CodingTracker
                     case "1":
                         Console.Clear();
                         PrintTable(GetRecords(DatabaseConnection()));
+                        Console.WriteLine("\nType Enter to go back to menu.");
+                        Console.ReadKey();
                         Console.Clear();
                         break;
                     case "2":

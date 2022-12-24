@@ -24,6 +24,7 @@ namespace CodingTracker
             {
                 Console.WriteLine($"\n{validationDate}");
                 input = Console.ReadLine();
+                if (input == "0") return input;
             }    
 
             return input;
