@@ -93,7 +93,7 @@ namespace CodingTracker
             TimeSpan timeTicks = new TimeSpan(durationTime.Ticks);
 
             var duration = string.Format("{0:00}:{1:00}:{2:00}", (int)timeTicks.TotalHours, timeTicks.Minutes, timeTicks.Seconds);
-         
+
             var cmd = conn.CreateCommand();
 
             cmd.CommandText =
@@ -111,7 +111,7 @@ namespace CodingTracker
         internal static void Delete(SQLiteConnection conn)
         {
             TableVisualization.PrintTable(GetRecords(conn));
-            
+
             if (listIsEmpty) return;
 
             var msgDelete = ConfigurationManager.AppSettings.Get("IdDelete");
@@ -122,7 +122,7 @@ namespace CodingTracker
             var cmd = conn.CreateCommand();
 
             cmd.CommandText =
-                $"DELETE FROM coding_session WHERE Id = '{inputId}'"; 
+                $"DELETE FROM coding_session WHERE Id = '{inputId}'";
 
             var rowCount = cmd.ExecuteNonQuery();
 
@@ -195,6 +195,40 @@ namespace CodingTracker
 
             Console.WriteLine("\nSucessfully updated record. Type Enter to go back to menu.");
             Console.ReadKey();
+
+            conn.Close();
+
+        }
+
+        internal static void InsertStopWatch(SQLiteConnection conn)
+        {
+            var msgStart = ConfigurationManager.AppSettings.Get("StopWatchStart");
+            var inputStart = Helpers.GetId($"\n{msgStart}");
+
+            if (inputStart.Equals("0")) return;
+
+            var timeStart = DateTime.Now;
+
+            var startTime = timeStart.ToString("dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture);
+
+            var msgEnd = ConfigurationManager.AppSettings.Get("StopWatchEnd");
+            var inputEnd = Helpers.GetId($"\n{msgEnd}");
+
+            if (inputEnd.Equals("0")) return;
+
+            var timeEnd = DateTime.Now;
+
+            var endTime = timeEnd.ToString("dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture);
+
+            var durationTime = timeEnd - timeStart;
+
+            var duration = string.Format("{0:00}:{1:00}:{2:00}", (int)durationTime.Hours, durationTime.Minutes, durationTime.Seconds);
+
+            var cmd = conn.CreateCommand();
+            cmd.CommandText =
+                $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{duration}')";
+
+            cmd.ExecuteNonQuery();
 
             conn.Close();
 
