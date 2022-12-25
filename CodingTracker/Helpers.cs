@@ -35,7 +35,7 @@ namespace CodingTracker
         {
             var validationId = ConfigurationManager.AppSettings.Get("ValidationId");
 
-            Console.Out.WriteLine(message);
+            Console.WriteLine(message);
             var input = Console.ReadLine();
 
             while (!int.TryParse(input, out _))
@@ -46,6 +46,25 @@ namespace CodingTracker
 
             return input;
 
+        }
+
+        internal static string GetPeriod(string message)
+        {
+            var validationPeriod = ConfigurationManager.AppSettings.Get("ValidationPeriod");
+
+            Console.WriteLine(message);
+            var input = Console.ReadLine();
+
+            if (input == "0") return input;
+
+            while (!DateOnly.TryParseExact(input, "dd-MM-yy", out _))
+            {
+                Console.WriteLine($"\n{validationPeriod}");
+                input = Console.ReadLine();
+                if (input == "0") return input;
+            }
+
+            return input;
         }
     }
 }
