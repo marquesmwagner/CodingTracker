@@ -257,7 +257,7 @@ namespace CodingTracker
             var cmd = conn.CreateCommand();
 
             cmd.CommandText =
-                $"SELECT * FROM coding_session WHERE substr(StartTime, 1, 8) = '{inputStart}' AND substr(EndTime, 1, 8) = '{inputEnd}'";
+                $"SELECT * FROM coding_session WHERE substr(StartTime, 1, 8) = '{inputStart}' AND substr(EndTime, 1, 8) = '{inputEnd}' ORDER BY StartTime";
 
             reader = cmd.ExecuteReader();
 
