@@ -12,3 +12,12 @@ In Coding Tracker you can log your coding session setting the beginning and end 
 * The user has the options to view all records or by a specific start and end time, insert manually or using StopWatch and delete or update a record by Id.
 
 ![image](https://user-images.githubusercontent.com/38431500/209474224-5a140da2-2fb0-4682-9a46-c9c5c77bef7b.png)
+
+# Requirements
+
+* .NET 7.0
+
+#  Setting up
+    Clone project
+    cd ~/CodingTracker
+    dotnet run
