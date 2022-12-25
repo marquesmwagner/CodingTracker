@@ -17,10 +17,11 @@ namespace CodingTracker
             {
                 new List<object> {"0", "Close application"},
                 new List<object> {"1", "View records"},
-                new List<object> {"2", "Insert record"},
-                new List<object> {"3", "Delete record"},
-                new List<object> {"4", "Update record"},
-                new List<object> {"5", "Insert via StopWatch"}
+                new List<object> {"2", "View records by specific start and end time"},
+                new List<object> {"3", "Insert record"},
+                new List<object> {"4", "Insert via StopWatch"},
+                new List<object> {"5", "Delete record"},
+                new List<object> {"6", "Update record"}
             };
 
             CreateTable();
@@ -48,22 +49,29 @@ namespace CodingTracker
                         break;
                     case "2":
                         Console.Clear();
-                        Insert(DatabaseConnection());
+                        PrintTable(GetRecordsBySpecificTime(DatabaseConnection()));
+                        Console.WriteLine("\nType Enter to go back to menu.");
+                        Console.ReadKey();
                         Console.Clear();
                         break;
                     case "3":
                         Console.Clear();
-                        Delete(DatabaseConnection());
+                        Insert(DatabaseConnection());
                         Console.Clear();
                         break;
                     case "4":
                         Console.Clear();
-                        Update(DatabaseConnection());
+                        InsertStopWatch(DatabaseConnection());
                         Console.Clear();
                         break;
                     case "5":
                         Console.Clear();
-                        InsertStopWatch(DatabaseConnection());
+                        Delete(DatabaseConnection());
+                        Console.Clear();
+                        break;
+                    case "6":
+                        Console.Clear();
+                        Update(DatabaseConnection());
                         Console.Clear();
                         break;
                     default:

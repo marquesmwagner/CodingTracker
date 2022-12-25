@@ -249,6 +249,7 @@ namespace CodingTracker
 
             var msgEnd = ConfigurationManager.AppSettings.Get("PeriodEnd");
             var inputEnd = Helpers.GetPeriod($"\n{msgEnd}");
+            Console.Clear();
 
             if (inputEnd == "0") return tableData;
 
