@@ -1,7 +1,7 @@
 # CodingTracker
 Coding Tracker application, developed using C#, SQLite and ConsoleTableExt library.
 
-In Coding Tracker you can log your coding session setting the beginning and end of the session manually, or using StopWatch.
+In Coding Tracker you can log your coding session in DateTime (Format: dd-MM-yy HH:mm:ss). Setting the beginning and end of the session manually, or using StopWatch.
 
 # Features
 
