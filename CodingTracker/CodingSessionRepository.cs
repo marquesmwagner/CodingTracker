@@ -233,5 +233,56 @@ namespace CodingTracker
             conn.Close();
 
         }
+
+        internal static List<CodingSession> GetRecordsBySpecificTime(SQLiteConnection conn)
+        {
+            TableVisualization.PrintTable(GetRecords(conn));
+
+            List<CodingSession> tableData = new();
+
+            if (listIsEmpty) return tableData;
+
+            var msgStart = ConfigurationManager.AppSettings.Get("PeriodStart");
+            var inputStart = Helpers.GetPeriod($"\n{msgStart}");
+
+            if (inputStart == "0") return tableData;
+
+            var msgEnd = ConfigurationManager.AppSettings.Get("PeriodEnd");
+            var inputEnd = Helpers.GetPeriod($"\n{msgEnd}");
+
+            if (inputEnd == "0") return tableData;
+
+            SQLiteDataReader reader;
+            var cmd = conn.CreateCommand();
+
+            cmd.CommandText =
+                $"SELECT * FROM coding_session WHERE substr(StartTime, 1, 8) = '{inputStart}' AND substr(EndTime, 1, 8) = '{inputEnd}'";
+
+            reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                tableData.Add(
+                    new CodingSession
+                    {
+                        Id = reader.GetInt32(0),
+                        StartTime = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture),
+                        EndTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture),
+                        Duration = reader.GetString(3)
+                    });
+            }
+
+            return tableData;
+        }
     }
 }
+
+
+/* TODO
+ * Let the users filter their coding records per period (weeks, days, years) and/or order ascending or descending.
+
+Create reports where the users can see their total and average coding session per period.
+
+Create the ability to set coding goals and show how far the users are from reaching their goal, along with how many hours a day they would have to code to reach their goal. 
+You can do it via SQL queries or with C#.
+*/
